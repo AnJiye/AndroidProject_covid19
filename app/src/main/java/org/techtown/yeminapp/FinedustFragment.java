@@ -1,12 +1,13 @@
 package org.techtown.yeminapp;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -19,26 +20,20 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 
-public class FinedustFragment extends Fragment {
-    public static interface ImageSelectionCallback {
-        public void onImageSelected(int position);
-    }
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
-    public ImageSelectionCallback callback;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if(context instanceof ImageSelectionCallback) {
-            callback = (ImageSelectionCallback) context;
-        }
-    }
+public class FinedustFragment extends Fragment{
+    int grade = 0;
+    int grade2 = 0;
+    int[] images = {R.drawable.good, R.drawable.normal, R.drawable.bad, R.drawable.verybad};
 
     EditText edit;
-    TextView text;
+    TextView dateTextView, text;
     String data;
+    ImageView imageView;
+    InputMethodManager imm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,14 +41,24 @@ public class FinedustFragment extends Fragment {
 
         edit = rootView.findViewById(R.id.edit);
         text = rootView.findViewById(R.id.result);
+        imageView = rootView.findViewById(R.id.imageView5);
+        imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+
+        dateTextView=rootView.findViewById(R.id.textView9);
+        long nowDate = System.currentTimeMillis();
+        SimpleDateFormat sDate = new SimpleDateFormat("yyyy.MM.dd hh시");
+        String getTime = sDate.format(nowDate);
+        dateTextView.append(getTime);
 
         Button button = rootView.findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnClick(v);
+                imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
             }
         });
+
         return rootView;
     }
 
@@ -61,19 +66,14 @@ public class FinedustFragment extends Fragment {
     public void mOnClick(View v) {
         switch (v.getId()) {
             case R.id.button1:
-                //Android 4.0 이상부터는 네트워크를 이용할 때 반드시 Thread를 사용해야함
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        //XML data를 파싱해서 String 객체로 얻어오기
                         data = getXmlData();
-                        //UI Thread(Main Thread)를 제외한 어떤 Thread도 화면을 변경할 수 없기 때문에
-                        //runOnUiThread()를 이용하여 UI Thread가 TextView 글씨 변경하도록 함
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //Log.d("log msg", data);
-                                text.setText(data);     //TextView에 문자열 data 출력
+                                text.setText(data);
                             }
                         });
                     }
@@ -85,11 +85,10 @@ public class FinedustFragment extends Fragment {
 
     //XmlPullParser를 이용하여 OpenAPI XML 파일 파싱하기
     String getXmlData() {
-        int grade = 1;
         StringBuffer buffer = new StringBuffer();
         String key = "DuGy2ql2LMAU%2FxFGN3Fu0OR%2Bk6y4zuoTW7kpEPjLe3IOnqRe0QscARteW3Y55xHY8HESiiRupIKfCAifjf5Rqg%3D%3D";
 
-        String str = edit.getText().toString();     //EditText에 작성된 Text 얻어오기
+        String str = edit.getText().toString();
         String location = new String();
         try {
             location = URLEncoder.encode(str, "UTF-8");
@@ -100,12 +99,12 @@ public class FinedustFragment extends Fragment {
                             + location + "&pageNo=1&numOfRows=10&ServiceKey="+ key +"&ver=1.3";
 
         try {
-            URL url = new URL(queryUrl);            //문자열로 된 요청 url을 URL 객체로 생성
-            InputStream is = url.openStream();      //url 위치로 입력스트림 연결
+            URL url = new URL(queryUrl);
+            InputStream is = url.openStream();
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is, "UTF-8"));       //inputstream으로부터 xml 입력받기
+            xpp.setInput(new InputStreamReader(is, "UTF-8"));
 
             String tag;
 
@@ -119,44 +118,67 @@ public class FinedustFragment extends Fragment {
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag = xpp.getName();    //태그 이름 얻어오기
+                        tag = xpp.getName();
 
-                        if(tag != null && tag.equals("item"));     //첫번째 검색결과
-                        else if(tag != null && tag.equals("stationName")) {
-                            buffer.append("구 이름 : ");
-                            xpp.next();
-                            buffer.append(xpp.getText());   //title 요소의 TEXT 읽어와서 문자열버퍼에 추가
-                            buffer.append("\n");
-                        }
-                        else if(tag != null && tag.equals("dataTime")) {
-                            buffer.append("시간 : ");
+                        if(tag.equals("item"));
+                        else if(tag.equals("stationName")) {
+                            buffer.append("측정소 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
                             buffer.append("\n");
                         }
-                        else if(tag != null && tag.equals("pm10Value")) {
+                        else if(tag.equals("pm10Value")) {
                             buffer.append("미세먼지 농도 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
-                            buffer.append("\n");
+                            buffer.append("㎍/㎥\n");
                         }
-                        else if(tag != null && tag.equals("pm25Value")) {
+                        else if(tag.equals("pm25Value")) {
                             buffer.append("초미세먼지 농도 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
-                            buffer.append("\n");
+                            buffer.append("㎍/㎥\n");
                         }
-                        else if(tag != null && tag.equals("pm10Grade")) {
+                        else if(tag.equals("pm10Grade")) {
                             buffer.append("미세먼지 등급 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
-                            grade = Integer.parseInt(xpp.getText());        // 등급 저장
+                            grade = Integer.parseInt(xpp.getText());
+                            switch (grade) {
+                                case 1:
+                                    buffer.append(" (좋음)");
+                                    break;
+                                case 2:
+                                    buffer.append(" (보통)");
+                                    break;
+                                case 3:
+                                    buffer.append(" (나쁨)");
+                                    break;
+                                case 4:
+                                    buffer.append(" (매우나쁨)");
+                                    break;
+                            }
                             buffer.append("\n");
                         }
-                        else if(tag != null && tag.equals("pm25Grade")) {
+                        else if(tag.equals("pm25Grade")) {
                             buffer.append("초미세먼지 등급 : ");
                             xpp.next();
                             buffer.append(xpp.getText());
+                            grade2 = Integer.parseInt(xpp.getText());
+                            switch (grade2) {
+                                case 1:
+                                    buffer.append(" (좋음)");
+                                    break;
+                                case 2:
+                                    buffer.append(" (보통)");
+                                    break;
+                                case 3:
+                                    buffer.append(" (나쁨)");
+                                    break;
+                                case 4:
+                                    buffer.append(" (매우나쁨)");
+                                    break;
+                            }
                             buffer.append("\n");
                         }
                         break;
@@ -166,7 +188,7 @@ public class FinedustFragment extends Fragment {
 
                     case XmlPullParser.END_TAG:
                         tag = xpp.getName();
-                        if(tag != null && tag.equals("item"))
+                        if(tag.equals("item"))
                             buffer.append("\n");
                         break;
                 }
@@ -175,29 +197,21 @@ public class FinedustFragment extends Fragment {
         } catch (Exception e) {
             // TODO Auto-generated catch blocke.printStackTrace();
         }
-        //buffer.append("파싱 끝\n");
+
         switch (grade) {
             case 1:
-                if (callback != null) {
-                    callback.onImageSelected(0);
-                }
+                imageView.setImageResource(images[0]);
                 break;
             case 2:
-                if (callback != null) {
-                    callback.onImageSelected(1);
-                }
+                imageView.setImageResource(images[1]);
                 break;
             case 3:
-                if (callback != null) {
-                    callback.onImageSelected(2);
-                }
+                imageView.setImageResource(images[2]);
                 break;
             case 4:
-                if (callback != null) {
-                    callback.onImageSelected(3);
-                }
-                break;
+                imageView.setImageResource(images[3]);
         }
+
         return buffer.toString();
     }
 }

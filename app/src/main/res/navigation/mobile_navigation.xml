@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="org.techtown.yeminapp.ui.home.HomeFragment"
+
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="org.techtown.yeminapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+
+        android:label="@string/menu_covid"
+        tools:layout="@layout/fragment_menucorona" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="org.techtown.yeminapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+
+        android:label="@string/menu_dust"
+        tools:layout="@layout/fragment_menudust" />
 </navigation>

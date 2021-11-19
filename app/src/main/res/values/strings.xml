@@ -2,12 +2,13 @@
     <string name="app_name">YeminApp</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">써볼까?</string>
+    <string name="nav_header_subtitle">201812778 손효민\t201819168 안지예</string>
+    <string name="finedust_info">미세먼지 : 지름이 10μm보다 작고 2.5보다 큰 입자\n초미세먼지 : 지름이 2.5μm이하의 입자\n\n급성 노출 시에는 기도의 자극으로 인한 기침과 호흡 곤란이 발생하며, 천식이 악화되고 부정맥이 발생한다.\n\n만성 노출 시에는 폐기능이 감소하고 만성 기관지염이 증가하고 사망률을 높일 수 있다.\n\n[예방]\n - 실외 활동 시에 황사마스크를 착용하고, 불가피한 외출 후에는 코와 손을 잘 씻는 것이 좋다.\n - 창문을 열어 두면 외부에서 유입된 미세먼지로 실내의 미세먼지 농도가 증가하기 때문에 창문을 닫아야 한다. 에어 필터나 공기청정기가 도움이 될 수 있다.</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Covid19</string>
-    <string name="menu_slideshow">FineDust</string>
+    <string name="menu_covid">Covid19</string>
+    <string name="menu_dust">FineDust</string>
 </resources>

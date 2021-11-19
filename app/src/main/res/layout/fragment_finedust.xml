@@ -6,6 +6,23 @@
     android:layout_height="match_parent"
     android:background="#F9E5AF">
 
+    <ScrollView
+        android:layout_width="369dp"
+        android:layout_height="233dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline">
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/dx_subtitles"
+            android:text="@string/finedust_info"
+            android:textSize="15dp" />
+
+    </ScrollView>
+
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="70dp"
@@ -30,14 +47,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="268dp"
+        android:layout_marginLeft="268dp"
+        android:layout_marginTop="68dp"
+        android:fontFamily="@font/dx_subtitles"
+        android:textSize="17dp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/edit"
         android:layout_width="212dp"
         android:layout_height="49dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="15dp"
         android:fontFamily="@font/dx_subtitles"
-        android:hint="지역을 검색해주세요"
-        tools:layout_editor_absoluteX="64dp"
-        tools:layout_editor_absoluteY="113dp" />
+        android:hint="지역을 입력해주세요"
+        android:imeOptions="actionDone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <Button
         android:id="@+id/button1"
@@ -51,18 +85,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:layout_width="390dp"
-        android:layout_height="130dp"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="465dp">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="26dp" />
 
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/dx_subtitles" />
-
-    </ScrollView>
+    <ImageView
+        android:id="@+id/imageView5"
+        android:name="org.techtown.yeminapp.FaceFragment"
+        android:layout_width="250dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="180dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/question" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

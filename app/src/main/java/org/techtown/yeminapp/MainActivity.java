@@ -14,10 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, org.techtown.yeminapp.FragmentCallback {
-
-    MainFragment fragment1;
-    CoronaFragment fragment2;
-    FinedustFragment fragment3;
+    MainFragment mainFragment;
+    CoronaFragment coronaFragment;
+    FinedustFragment finedustFragment;
 
     DrawerLayout drawer;
     Toolbar toolbar;
@@ -39,17 +38,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View nav_header_view = navigationView.getHeaderView(0);
-        TextView textView1 = (TextView)nav_header_view.findViewById(R.id.textView);
-        TextView textView2 = (TextView)nav_header_view.findViewById(R.id.textView1);
-        textView2.setText("getHeaderView 사용하면");
-        textView1.setText("다른 xml 에서 컨트롤중 ");
+        mainFragment = new MainFragment();
+        coronaFragment = new CoronaFragment();
+        finedustFragment = new FinedustFragment();
 
-        fragment1 = new MainFragment();
-        fragment2 = new CoronaFragment();
-        fragment3 = new FinedustFragment();
-
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment1).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, mainFragment).commit();
     }
 
     @Override
@@ -66,13 +59,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.menu1) {
-            Toast.makeText(this, "첫번째 메뉴 선택됨.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Main", Toast.LENGTH_LONG).show();
             onFragmentSelected(0, null);
         } else if (id == R.id.menu2) {
-            Toast.makeText(this, "두번째 메뉴 선택됨.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "COVID-19", Toast.LENGTH_LONG).show();
             onFragmentSelected(1, null);
         } else if (id == R.id.menu3) {
-            Toast.makeText(this, "세번째 메뉴 선택됨.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Fine Dust", Toast.LENGTH_LONG).show();
             onFragmentSelected(2, null);
         }
 
@@ -86,14 +79,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment curFragment = null;
 
         if (position == 0) {
-            curFragment = fragment1;
+            curFragment = mainFragment;
             toolbar.setTitle("Main");
         } else if (position == 1) {
-            curFragment = fragment2;
-            toolbar.setTitle("Corona");
+            curFragment = coronaFragment;
+            toolbar.setTitle("COVID-19");
         } else if (position == 2) {
-            curFragment = fragment3;
-            toolbar.setTitle("미세먼지");
+            curFragment = finedustFragment;
+            toolbar.setTitle("Fine Dust");
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, curFragment).commit();
